@@ -7,12 +7,6 @@ import os
 '''
 A workflow to process multiple set of photos in Photoscan.
 
-See the bottom of the file for configuration options and documentation.
-'''
-
-###########################################################################################################
-
-'''
 Expects a directory structure like this:
 <HomeDirectory>
 	Directory1
@@ -27,11 +21,11 @@ Expects a directory structure like this:
 It will put a PhotoScan project file in the base of each directory named <directory>.psz.
 All the photos from the <PhotosPdirectory> will be added to the project.
 
-The workflow produces an fbx and texture for each directory, which will be placed in the root
-of the directory.
+The workflow produces an fbx and texture for each directory, which will be placed in the export directory.
 
 This script can be run multiple times to continue processing after a crashed or cancelled processing run. It
 will skip stages that have already been completed.
+
 '''
 
 ## Configuration
@@ -270,6 +264,10 @@ def make_or_open_project(project_dir, photos_dir):
 		return open_project(project_dir)
 	else:
 		return make_project(project_dir, photos_dir)
+
+
+
+###########################################################################################################
 
 
 def build(project_dir, photos_dir, jobs):
