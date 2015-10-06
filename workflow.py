@@ -30,7 +30,7 @@ will skip stages that have already been completed.
 
 ## Configuration
 
-HomeDirectory = "E:\\Captures"
+HomeDirectory = "E:\\Captures\\ToDo"
 PhotosDirectory = "Photos"
 ExportDirectory = "Export"
 
@@ -104,7 +104,7 @@ def close_log():
 	log_file.close()
 
 def log_time():
-	log( datetime.datetime.utcnow() )
+	log( datetime.datetime.now() )
 
 
 #################################################
@@ -292,7 +292,6 @@ def build(project_dir, photos_dir, jobs):
 	# For use by jobs
 	chunk.label = project_dir
 
-	ret = True
 	for job in jobs:
 		if job.can_run( chunk ):
 			if job.run( chunk ):
@@ -300,8 +299,7 @@ def build(project_dir, photos_dir, jobs):
 				doc.save()
 			else:
 				log( "ERROR: Job failed - " + job.name )
-				ret = False
-				break
+				return False
 		else:
 			log( "Skipping job " + job.name )
 
@@ -309,7 +307,7 @@ def build(project_dir, photos_dir, jobs):
 	log( "Finished building chunk" )
 	log_time()
 
-	return ret
+	return True
 
 
 ###########################################################################################################
