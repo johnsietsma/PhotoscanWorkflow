@@ -115,6 +115,7 @@ def does_project_exist(project_dir):
 	project_name = make_project_filename(project_dir, "psz")
 	return glob.glob(project_dir + "\\*.psz")
 
+
 def are_cameras_aligned(chunk):
 	'Assume cameras are aligned if at least one of them have been moved.'
 	return len([c for c in chunk.cameras if c.center is not None]) > 0
@@ -128,6 +129,12 @@ def export_file_exists(project_directory, format):
 def is_valid_project_dir( project_dir, photos_dir ):
 	"A valid project directory has a photos subdirectory."
 	return photos_dir.upper() in (d.upper() for d in os.listdir(project_dir))
+
+
+def align_cameras(chunk):
+	'Aligns the cameras and returns whether it succeeded or not.'
+	chunk.alignCameras()
+	return are_cameras_aligned(chunk)
 
 
 def estimate_image_quality(photo):
@@ -322,7 +329,7 @@ match_photos_job = WorkflowJob(
 align_cameras_job = WorkflowJob(
 		"Align Cameras", 
 		lambda chunk: not are_cameras_aligned(chunk),
-		lambda chunk: chunk.alignCameras
+		lambda chunk: align_cameras(chunk)
 	)
 
 build_point_cloud_job = WorkflowJob(
