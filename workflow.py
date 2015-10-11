@@ -255,7 +255,7 @@ def make_project(project_dir, photos_dir):
 	photos = [os.path.join(photos_dir,p) for p in photos]
 	log( "Found {} photos in {}".format(len(photos), photos_dir))
 	if not chunk.addPhotos(photos):
-		log( "ERROR: Failed to add photos: " + photos)
+		log( "ERROR: Failed to add photos: " + str(photos))
 
 	# Save the new project
 	project_name = make_project_filename(project_dir, "psz")
