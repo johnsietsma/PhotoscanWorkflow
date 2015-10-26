@@ -62,7 +62,15 @@ export_model_config = {
 	'format': "fbx"
 }
 
-build_texture_config = {}
+build_uv_config = {
+	'mapping': PhotoScan.GenericMapping
+}
+
+build_texture_config = {
+	'blending': PhotoScan.BlendingMode.MosaicBlending,
+	'color_correction': False,
+	'size': 4096
+}
 
 #################################################
 
@@ -245,8 +253,8 @@ def make_project(project_dir, photos_dir):
 
 	log( "Making project " + project_dir )
 
-	# Create new doc
-	doc = PhotoScan.Document()
+	doc = PhotoScan.Document() # Operate on a new document for batch proecssing
+	#doc = PhotoScan.app.document # Use the current open document in PhotoScan
 
 	# Add the photos to a chunk
 	chunk = doc.addChunk()
@@ -350,6 +358,12 @@ build_model_job = WorkflowJob(
 		lambda chunk: chunk.buildModel(**build_model_config)
 	)
 
+build_uv_job = WorkflowJob(
+		"Build UV", 
+		lambda chunk: not chunk.model.texture(),
+		lambda chunk: chunk.buildUV(**build_uv_config)
+	)
+
 build_texture_job = WorkflowJob(
 		"Build texture", 
 		lambda chunk: not chunk.model.texture(),
@@ -388,6 +402,7 @@ jobs = (
 		build_point_cloud_job,
 		build_dense_cloud_job,
 		build_model_job,
+		build_uv_job,
 		build_texture_job,
 		export_model_job,
 		export_texture_job
